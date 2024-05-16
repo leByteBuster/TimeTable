@@ -1,1 +1,9 @@
-<p>task works!</p>
+<div
+  id="taskId"
+  [class]="'task'" 
+  [style.top.px]="position.y"
+  [style.left.px]="position.x"
+  contenteditable="true" 
+  (mousedown)=onMouseDown($event)>
+  Enter your task..
+</div>

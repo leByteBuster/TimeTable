@@ -1,0 +1,40 @@
+
+// flex container
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80vw;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+// flex item
+.tablecell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100%/7.9); // need to be less than 8 because first colum is smaller  
+  // min-width: 100px; does not really work yet
+  height: 40px; 
+  background-color: white;
+  border: 1px solid #999999;
+  border-top: none; // remove top border for all elements (so no border collapse simulation ala negative margin is necessary)
+  border-right: none; // remove right border for all elements (same reason)
+  font-size: 0.8em;
+  text-align: center;
+  //vertical-align: middle; // this does not seem to work
+}
+
+
+.tablecell:nth-child(8n-7) {
+  border-left: none; /* Remove left border for every 1st element */
+  background: #eeeeee;
+  width: calc(100%/12); 
+}
+
+.tablecell:nth-child(n+193) {
+  border-bottom: none; /* Remove bottom border for last row */
+}
+
+

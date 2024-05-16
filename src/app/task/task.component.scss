@@ -1,0 +1,23 @@
+.task {
+  width: calc(80vw / 7.9);
+  height: 100px;
+  padding: 3px;
+  position: absolute;
+  z-index:100;
+  left:30%;
+  top:30%;
+  background: #275de6;
+  color: white;
+  border: 1px solid black;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+}
+
+.task {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.task::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+

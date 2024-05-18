@@ -10,17 +10,24 @@ export class TaskComponent implements OnInit {
   taskId: string = ""; 
 
   dragging = false 
+  resizing = false 
 
+  height = 100; 
+  minHeight = 20;
+
+  // current task position
   position = {
     x: 0,
     y: 0
   }
 
+  // last mouse position (is only updated according the needs of the current event)
   mousePosition = {
     x: 0,
     y: 0
   }
 
+  // offset between pointer and window (is only updated according the needs of the current event)
   offset = { 
     x: 0,
     y: 0
@@ -32,41 +39,72 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onMouseDown(event: MouseEvent) {
+  onStartResizeUpper(event: MouseEvent){
+    this.resizing = true;
+    this.mousePosition.y = event.clientY;
+
+    // Listen to mousemove and mouseup events on document
+    document.addEventListener('mousemove', this.resizeUpper);
+    document.addEventListener('mouseup', this.stopResizing);
+  }
+
+  resizeUpper = (event: MouseEvent) => {
+    if (!this.resizing) return;
+
+    let dist = this.mousePosition.y - event.clientY;
+    this.mousePosition.y = event.clientY;
+
+    if(this.height + dist >= this.minHeight){
+      this.height = this.height + dist; 
+      this.position.y = this.position.y - dist; 
+    }
+  }
+
+  onStartResizeLower(event: MouseEvent){
+    this.resizing = true;
+    this.mousePosition.y = event.clientY;
+  
+    // Listen to mousemove and mouseup events on document
+    document.addEventListener('mousemove', this.resizeLower);
+    document.addEventListener('mouseup', this.stopResizing);
+  }
+
+  resizeLower = (event: MouseEvent) => {
+    if (!this.resizing) return;
+
+    let dist = event.clientY - this.mousePosition.y; 
+    this.mousePosition.y = event.clientY;
+
+    if(this.height + dist >= this.minHeight){
+      this.height = this.height + dist; 
+    }
+  }
+
+  stopResizing = () => {
+    this.resizing = false;
+    console.log("stopped resizing ")
+    document.removeEventListener('mousemove', this.resizeLower);
+    document.removeEventListener('mousemove', this.resizeUpper);
+    document.removeEventListener('mouseup', this.stopResizing);
+  }
+
+
+  onStartDragging(event: MouseEvent) {
 
     this.dragging = true;
 
     this.mousePosition.x = event.clientX;
     this.mousePosition.y = event.clientY;
 
-
-    console.log("Mouse Position X", this.mousePosition.x)
-    console.log("Mouse Position Y", this.mousePosition.y)
-
-    const element = event.target as HTMLElement;
-    const rect = element.getBoundingClientRect();
-
-    this.position.x = rect.left
-    this.position.y = rect.top
-
-    console.log("Element Position X", this.position.x)
-    console.log("Element Position Y", this.position.y)
-    console.log("Element width", rect.width)
-    console.log("Element height", rect.height)
-
     this.offset.x = this.mousePosition.x - this.position.x
     this.offset.y = this.mousePosition.y - this.position.y
 
-    console.log("Offset X", this.offset.x)
-    console.log("Offset Y", this.offset.y)
-
-
     // Listen to mousemove and mouseup events on document
-    document.addEventListener('mousemove', this.mouseMove);
+    document.addEventListener('mousemove', this.onDragging);
     document.addEventListener('mouseup', this.stopDragging);
   }
 
-  mouseMove = (event: MouseEvent) => {
+  onDragging = (event: MouseEvent) => {
     if (!this.dragging) return;
     this.position.x = event.clientX - this.offset.x;
     this.position.y = event.clientY - this.offset.y;
@@ -74,7 +112,7 @@ export class TaskComponent implements OnInit {
 
   stopDragging = () => {
     this.dragging = false;
-    document.removeEventListener('mousemove', this.mouseMove);
+    document.removeEventListener('mousemove', this.onDragging);
     document.removeEventListener('mouseup', this.stopDragging);
   };
 

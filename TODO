@@ -1,0 +1,3 @@
+-[] clean css
+-[] disable text selection in task (not possible with only css for elements set 'contenteditable')
+-[] make task magnetic

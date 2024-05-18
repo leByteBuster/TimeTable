@@ -17,7 +17,6 @@ export class AppComponent {
 
   createTask(): void {
     const component = this.viewContainerRef.createComponent(TaskComponent);
-    const element: HTMLElement = component.location.nativeElement;
 
     // set id
     component.instance.taskId = `task-${this.taskCount}`;

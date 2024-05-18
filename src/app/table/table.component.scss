@@ -16,6 +16,7 @@
   justify-content: center;
   width: calc(100%/7.9); // need to be less than 8 because first colum is smaller  
   // min-width: 100px; does not really work yet
+  user-select: none;
   height: 40px; 
   background-color: white;
   border: 1px solid #999999;

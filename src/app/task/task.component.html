@@ -1,9 +1,22 @@
-<div
-  id="taskId"
-  [class]="'task'" 
+<div id="task-container"
   [style.top.px]="position.y"
   [style.left.px]="position.x"
-  contenteditable="true" 
-  (mousedown)=onMouseDown($event)>
-  Enter your task..
+  [style.height.px]="height"
+  >
+  <div id="upper-resizer"
+    (mousedown)=onStartResizeUpper($event)></div>
+  <div id="task-header" 
+    [ngStyle]="{'cursor': dragging ? 'grabbing' : 'grab'}"
+    (mousedown)=onStartDragging($event)>
+  </div>
+
+  <div
+    id="taskId"
+    [class]="'task-content'" 
+    contenteditable="true">
+    Enter your task..
+  </div>
+  <div id="lower-resizer"
+    (mousedown)=onStartResizeLower($event)
+    ></div>
 </div>

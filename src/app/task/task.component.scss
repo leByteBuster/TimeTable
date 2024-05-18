@@ -1,23 +1,53 @@
-.task {
-  width: calc(80vw / 7.9);
-  height: 100px;
-  padding: 3px;
+#task-container {
+  width: calc((80vw / 7.9) - 5px) ;
   position: absolute;
   z-index:100;
-  left:30%;
-  top:30%;
-  background: #275de6;
-  color: white;
+
   border: 1px solid black;
-  overflow-wrap: break-word;
-  overflow-y: auto;
+  background: #275de6;
 }
 
-.task {
+#task-header {
+  height: 1em;
+  background: #579dff;
+  cursor: grab;
+}
+
+#upper-resizer {
+  background: #579dff;
+  cursor: n-resize;
+  width: 100%;
+  height: 2px;
+}
+
+#lower-resizer {
+  cursor: s-resize;
+  width: 100%;
+  height: 2px;
+}
+
+.task-content {
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  height: calc(100% - 1em - 4px);
+  padding: 3px;
+
+  color: white;
+}
+
+// todo: create no-scrollbar css class 
+
+.task-content:focus {
+    outline: none;
+}
+
+.task-content {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
 }
-.task::-webkit-scrollbar {
+
+.task-content::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
 }
+
 

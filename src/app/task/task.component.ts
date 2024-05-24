@@ -1,19 +1,25 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, NgZone, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.scss']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent {
 
   taskId: string = ""; 
 
   dragging = false 
   resizing = false 
 
+  // initialize empty function 
+  removeResizeListener: () => void = () => {};
+  removeStopResizeListener: () => void = () => {};
+  removeDraggingListener: () => void = () => {};
+  removeStopDraggingListener: () => void = () => {};
+
   height = 100; 
-  minHeight = 20;
+  minHeight = 30;
 
   // current task position
   position = {
@@ -33,40 +39,55 @@ export class TaskComponent implements OnInit {
     y: 0
   }
 
-  constructor() { 
-  }
-
-  ngOnInit(): void {
+  constructor(private ngZone: NgZone, private renderer: Renderer2,  private cdr: ChangeDetectorRef) { 
   }
 
   onStartResizeUpper(event: MouseEvent){
     this.resizing = true;
     this.mousePosition.y = event.clientY;
 
-    // Listen to mousemove and mouseup events on document
-    document.addEventListener('mousemove', this.resizeUpper);
-    document.addEventListener('mouseup', this.stopResizing);
+    // Listen to mousemove event outside ng zone
+    this.ngZone.runOutsideAngular(() => {
+      this.removeResizeListener = this.renderer.listen(document, 'mousemove', this.resizeUpper);
+    })
+
+    // Listen to mousemove event outside ng zone
+    this.ngZone.runOutsideAngular(() => {
+      this.removeStopResizeListener = this.renderer.listen(document, 'mouseup', this.stopResizing);
+    })
   }
 
   resizeUpper = (event: MouseEvent) => {
     if (!this.resizing) return;
-
+    
     let dist = this.mousePosition.y - event.clientY;
     this.mousePosition.y = event.clientY;
-
+    
     if(this.height + dist >= this.minHeight){
       this.height = this.height + dist; 
       this.position.y = this.position.y - dist; 
     }
+
+    // manually mark as changed within the angular zone so change detection  
+    // this only triggers change detection for this element and its children 
+    this.ngZone.run(() => {
+       this.cdr.markForCheck();
+    });
   }
 
   onStartResizeLower(event: MouseEvent){
     this.resizing = true;
     this.mousePosition.y = event.clientY;
   
-    // Listen to mousemove and mouseup events on document
-    document.addEventListener('mousemove', this.resizeLower);
-    document.addEventListener('mouseup', this.stopResizing);
+    // Listen to mousemove event outside ng zone
+    this.ngZone.runOutsideAngular(() => {
+      this.removeResizeListener = this.renderer.listen(document, 'mousemove', this.resizeLower);
+    })
+
+    // Listen to mousemove event outside ng zone
+    this.ngZone.runOutsideAngular(() => {
+      this.removeStopResizeListener = this.renderer.listen(document, 'mouseup', this.stopResizing);
+    })
   }
 
   resizeLower = (event: MouseEvent) => {
@@ -78,14 +99,26 @@ export class TaskComponent implements OnInit {
     if(this.height + dist >= this.minHeight){
       this.height = this.height + dist; 
     }
+
+    // manually mark as changed within the angular zone so change detection  
+    // this only triggers change detection for this element and its children 
+    this.ngZone.run(() => {
+       this.cdr.markForCheck();
+    });
   }
 
   stopResizing = () => {
     this.resizing = false;
-    console.log("stopped resizing ")
-    document.removeEventListener('mousemove', this.resizeLower);
-    document.removeEventListener('mousemove', this.resizeUpper);
-    document.removeEventListener('mouseup', this.stopResizing);
+
+    this.removeResizeListener();
+    this.removeResizeListener = () => {};
+    this.removeStopResizeListener();
+    this.removeStopResizeListener = () => {};
+
+    // mark for check - just to avoid unexpected behaviour 
+    this.ngZone.run(() => {
+       this.cdr.markForCheck();
+    });
   }
 
 
@@ -99,21 +132,41 @@ export class TaskComponent implements OnInit {
     this.offset.x = this.mousePosition.x - this.position.x
     this.offset.y = this.mousePosition.y - this.position.y
 
-    // Listen to mousemove and mouseup events on document
-    document.addEventListener('mousemove', this.onDragging);
-    document.addEventListener('mouseup', this.stopDragging);
+    // Listen to mousemove event outside ng zone
+    this.ngZone.runOutsideAngular(() => {
+      this.removeDraggingListener = this.renderer.listen(document, 'mousemove', this.onDragging);
+    })
+
+    // Listen to mousemove event outside ng zone
+    this.ngZone.runOutsideAngular(() => {
+      this.removeStopDraggingListener = this.renderer.listen(document, 'mouseup', this.stopDragging);
+    })
   }
 
   onDragging = (event: MouseEvent) => {
     if (!this.dragging) return;
     this.position.x = event.clientX - this.offset.x;
     this.position.y = event.clientY - this.offset.y;
+
+    // manually mark as changed within the angular zone so change detection  
+    // this only triggers change detection for this element and its children 
+    this.ngZone.run(() => {
+       this.cdr.markForCheck();
+    });
   };
 
   stopDragging = () => {
     this.dragging = false;
-    document.removeEventListener('mousemove', this.onDragging);
-    document.removeEventListener('mouseup', this.stopDragging);
+
+    this.removeDraggingListener();
+    this.removeDraggingListener = () => {};
+    this.removeStopDraggingListener();
+    this.removeStopDraggingListener = () => {};
+   
+    // mark for check - otherwise cursor is not updated and still 'grabbing'
+    this.ngZone.run(() => {
+       this.cdr.markForCheck();
+    });
   };
 
 }

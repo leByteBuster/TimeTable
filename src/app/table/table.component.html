@@ -1,6 +1,6 @@
-<ng-container *ngFor="let e of [].constructor(25); let i = index">
+<ng-container *ngFor="let e of [].constructor(49); let i = index">
     <div [class]="'tablecell'"  *ngFor="let day of days; let j = index"> 
       <ng-container *ngIf="i == 0"> {{day}} </ng-container>
-      <ng-container *ngIf="j == 0 && i > 0"> {{i-1}}:00 -  {{i}}:00 </ng-container>
+      <ng-container *ngIf="j == 0 && i > 0 && i % 2 == 1"> {{(i-1)/2}}:00</ng-container>
     </div>
 </ng-container> 

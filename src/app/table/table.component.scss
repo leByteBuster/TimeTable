@@ -17,9 +17,9 @@
   width: calc(100%/7.9); // need to be less than 8 because first colum is smaller  
   // min-width: 100px; does not really work yet
   user-select: none;
-  height: 40px; 
+  height: 30px;
   background-color: white;
-  border: 1px solid #999999;
+  border: 1px solid #AAAAAA;
   border-top: none; // remove top border for all elements (so no border collapse simulation ala negative margin is necessary)
   border-right: none; // remove right border for all elements (same reason)
   font-size: 0.8em;
@@ -28,13 +28,20 @@
 }
 
 
+.tablecell:nth-child(16n+9), .tablecell:nth-child(16n+10), .tablecell:nth-child(16n+11), .tablecell:nth-child(16n+12),
+.tablecell:nth-child(16n+13), .tablecell:nth-child(16n+14), .tablecell:nth-child(16n+15), .tablecell:nth-child(16n+16),
+{
+  /* CSS properties */
+  border-bottom: 1px solid #eeeeee;
+}
+
 .tablecell:nth-child(8n-7) {
   border-left: none; /* Remove left border for every 1st element */
   background: #eeeeee;
   width: calc(100%/12); 
 }
 
-.tablecell:nth-child(n+193) {
+.tablecell:nth-child(n+385) {
   border-bottom: none; /* Remove bottom border for last row */
 }
 

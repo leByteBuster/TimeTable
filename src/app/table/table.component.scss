@@ -1,15 +1,15 @@
 
-// flex container
+// time table container
 :host {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 80vw;
+  //width: 80vw;
   box-sizing: border-box;
   padding: 20px;
 }
 
-// flex item
+/* standard time table cell */
 .tablecell {
   display: flex;
   align-items: center;
@@ -28,21 +28,23 @@
 }
 
 
+/* every second row grey bottom border (half hour step) */
 .tablecell:nth-child(16n+9), .tablecell:nth-child(16n+10), .tablecell:nth-child(16n+11), .tablecell:nth-child(16n+12),
 .tablecell:nth-child(16n+13), .tablecell:nth-child(16n+14), .tablecell:nth-child(16n+15), .tablecell:nth-child(16n+16),
 {
-  /* CSS properties */
   border-bottom: 1px solid #eeeeee;
 }
 
+/* first column */
 .tablecell:nth-child(8n-7) {
   border-left: none; /* Remove left border for every 1st element */
   background: #eeeeee;
   width: calc(100%/12); 
 }
 
+/* Remove bottom border for last row */
 .tablecell:nth-child(n+385) {
-  border-bottom: none; /* Remove bottom border for last row */
+  border-bottom: none; 
 }
 
 

@@ -1,2 +1,10 @@
-<div [class]="'table-container'"><tt-table></tt-table></div>
-<div [class]="'fixed-bottom-bar'"><button [class]="'task-button'" type="button" (click)="createTask()">+</button></div>
+<div [class]="'table-container'"><tt-table
+    (columnWidthEmitter)=setColumnWidth($event)
+    (firstColumnWidthEmitter)=setFirstColumnWidth($event)
+    (tablePositionEmitter)=onChangeTablePosition($event)
+    ></tt-table></div>
+<div [class]="'fixed-bottom-bar'">
+  <button [class]="'task-button'" type="button" (click)="createTask()">
+    +
+  </button>
+</div>

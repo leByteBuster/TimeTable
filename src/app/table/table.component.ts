@@ -11,6 +11,8 @@ export class TableComponent implements OnInit {
 
   firstColumnWidth = Infinity
   columnWidth = 0
+  padding = 20 // 20px padding of host. duplicate of css ! only for output // TODO: find better solution ? 
+
   days =  ["","monday","tuesday","wednesday","thursday","friday","saturday","sunday"]
 
   @ViewChildren('tableCells') tableCells!: QueryList<ElementRef>;
@@ -18,16 +20,17 @@ export class TableComponent implements OnInit {
   @Output() firstColumnWidthEmitter = new EventEmitter<number>();
   @Output() columnWidthEmitter = new EventEmitter<number>();
   @Output() tablePositionEmitter = new EventEmitter<Coordinate>();
+  @Output() tablePaddingEmitter = new EventEmitter<number>();
 
   // TODO: position should not change on scroll because its page position
   @HostListener('window:scroll', ['$event']) onScroll() { // for window scroll events
     this.updateCellWidth();
-    this.updateAbsolutePosition()
+    this.updatePosition()
   }
 
   @HostListener('window:resize', ['$event']) onResize() {
     this.updateCellWidth();
-    this.updateAbsolutePosition()
+    this.updatePosition()
   }
 
 
@@ -38,8 +41,10 @@ export class TableComponent implements OnInit {
   }
 
    ngAfterViewInit() {
+    this.tablePaddingEmitter.emit(this.padding);
+    console.log("Table Padding: ", this.padding);
     this.updateCellWidth(); 
-    this.updateAbsolutePosition();
+    this.updatePosition();
   }
 
   updateCellWidth(){
@@ -54,10 +59,11 @@ export class TableComponent implements OnInit {
     this.columnWidthEmitter.emit(this.columnWidth);
   }
 
-  updateAbsolutePosition() {
+  // update absolute position 
+  updatePosition() {
     let topleft: Coordinate = {
-      x: window.pageXOffset + this.el.nativeElement.getBoundingClientRect().left, 
-      y: window.pageYOffset + this.el.nativeElement.getBoundingClientRect().top
+      x: window.pageXOffset + this.el.nativeElement.getBoundingClientRect().left + this.padding, 
+      y: window.pageYOffset + this.el.nativeElement.getBoundingClientRect().top + this.padding,
     }
     console.log("Absoulte Table Position: ", topleft.x, topleft.y);
     this.tablePositionEmitter.emit(topleft)

@@ -1,25 +1,27 @@
-import { ChangeDetectorRef, Component, ElementRef, NgZone, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, NgZone, Renderer2, SimpleChanges} from '@angular/core';
+import { SnappingGrid } from './snapping-grid';
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.scss']
 })
-export class TaskComponent {
+export class TaskComponent implements OnChanges {
+
+  // Snap Grid that defines where to snap. Has to be set on invocation, 
+  // updated on every change (e.g., resizing & ngAfterViewInit) 
+  @Input() snapGrip: SnappingGrid | null = null
+  @Input() width = 0
 
   taskId: string = ""; 
 
   dragging = false 
   resizing = false 
 
-  // initialize empty function 
-  removeResizeListener: () => void = () => {};
-  removeStopResizeListener: () => void = () => {};
-  removeDraggingListener: () => void = () => {};
-  removeStopDraggingListener: () => void = () => {};
-
   height = 100; 
   minHeight = 30;
+
+  snappingOffset = 10
 
   // current task position
   position = {
@@ -39,7 +41,18 @@ export class TaskComponent {
     y: 0
   }
 
+  // initialize empty remove-listener-functions 
+  removeResizeListener: () => void = () => {};
+  removeStopResizeListener: () => void = () => {};
+  removeDraggingListener: () => void = () => {};
+  removeStopDraggingListener: () => void = () => {};
+
   constructor(private ngZone: NgZone, private renderer: Renderer2,  private cdr: ChangeDetectorRef) { 
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    console.log("ngOnChanges:");
+    console.log(JSON.stringify(changes));
   }
 
   onStartResizeUpper(event: MouseEvent){
@@ -148,12 +161,42 @@ export class TaskComponent {
     this.position.x = event.clientX - this.offset.x;
     this.position.y = event.clientY - this.offset.y;
 
+
+    console.log("Position: ", this.position.x, " ", this.position.y );
+    this.snap();
+
     // manually mark as changed within the angular zone so change detection  
     // this only triggers change detection for this element and its children 
     this.ngZone.run(() => {
        this.cdr.markForCheck();
     });
   };
+
+  snap(){
+
+   console.log("Snap Grid:");
+   console.log(JSON.stringify(this.snapGrip));
+
+   //  array.some(x => x >= n && x <= n + 0.5);
+   let horizontalLine = this.snapGrip!.horizontalLines.find(line => this.position.y >= line && this.position.y - line < this.snappingOffset );
+  
+   if (horizontalLine == undefined){
+     return;
+   }
+
+   let verticalLine = this.snapGrip!.verticalLines.find(line => this.position.x >= line && this.position.x - line < this.snappingOffset );
+
+    if (verticalLine == undefined){
+     return;
+   }
+
+   // snap!
+   this.position.x = verticalLine; 
+   this.position.y = horizontalLine;
+
+   console.log("Snap!!!: ", verticalLine, " " , horizontalLine);
+
+  }
 
   stopDragging = () => {
     this.dragging = false;

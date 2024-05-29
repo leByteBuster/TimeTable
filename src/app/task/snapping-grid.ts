@@ -1,4 +1,4 @@
-type SnappingData = {
+export type SnappingGrid = {
   horizontalLines: number[],
   xHorizontalStart: number ,
   xHorizontalEnd: number,
@@ -6,6 +6,4 @@ type SnappingData = {
   verticalLines: number[],
   yVerticalStart: number,
   yVerticalEnd: number,
-
- 
 }

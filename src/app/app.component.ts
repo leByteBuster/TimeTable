@@ -1,19 +1,30 @@
-import { ViewContainerRef, Component, ComponentRef } from '@angular/core';
-import {TaskComponent} from './task/task.component';
+import { Component,ChangeDetectorRef } from '@angular/core';
 import { Coordinate } from './table/tablePosition'; 
 import { SnappingGrid } from './task/snapping-grid'; 
 
 @Component({
-  selector: 'app-root',
+  selector: 'tt-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
+  // TODO NEXT:
+  // -[] how to pass initial position to task without data binding ? 
+  // -[] fix inaccurate snapping  
+
   title = 'TimeTable';
 
   taskCount = 0
-  taskList: ComponentRef<TaskComponent>[]  = [] 
+
+  // old task list with real components
+  // taskList: ComponentRef<TaskComponent>[]  = [] 
+  
+  // new task list with only neccessary data 
+  taskList: Task[] = []
+
+  // initial Position of task  
+  initPosition: Coordinate = {x: 0, y: 0}
 
   // all in px: 
   columnWidth = 0  
@@ -21,7 +32,7 @@ export class AppComponent {
   columnHeight = 30  // TODO: set as input (maybe get as output from children)
   tablePos: Coordinate = {x: 0, y: 0} // table position  
 
-  snappingGrid: SnappingGrid = {
+  snapGrid: SnappingGrid = {
     horizontalLines: [],
     xHorizontalStart: 0,
     xHorizontalEnd: 0,
@@ -33,22 +44,12 @@ export class AppComponent {
   magneticRows = 48
   magneticColumns = 7
 
-  constructor(private viewContainerRef: ViewContainerRef){
-  }
-
-  // TODO NEXT: implement the passing of changes of table cell size
-  // -[x] get width of cells  
-  // -[] calculate where to snap using width of cells (has to be recalculated on every scolling - moving)
-  // ngOnChanges gets called if something in parent changes (if input is changed)
-  // called before ngOnInit (if component has input fields) 
-  ngOnChanges(){
+  constructor(){
   }
 
   createTask(): void {
-    const component = this.viewContainerRef.createComponent(TaskComponent);
-
     // set id
-    component.instance.taskId = `task-${this.taskCount}`;
+    let task: Task = {taskId: `task-${this.taskCount}`, taskContent: ""};
     this.taskCount++;
 
     // Calculate the position based on the viewport size and scroll position
@@ -58,20 +59,15 @@ export class AppComponent {
     const left = (window.innerWidth * 0.30) + scrollLeft;
     const top = (window.innerHeight * 0.30) + scrollTop;
 
-    // Set the position
-    component.instance.position.x = left
-    component.instance.position.y = top
+    this.initPosition = {x: left, y: top}; 
 
-    // Set width of task to column width
-    component.instance.width = this.columnWidth; 
- 
-    // pass snapping object 
-    component.instance.snapGrip = this.snappingGrid;
-    
-    // TODO next: set snapping object as input in component
-    // create snapping object here 
+    this.taskList.push(task);
 
-    this.taskList.push(component);
+    console.log("TaskList: ", this.taskList)
+
+    // only needed when OnPush strategy is used i think 
+    //this.cdr.markForCheck();
+    //this.cdr.detectChanges();
   }
 
   setFirstColumnWidth(width: number){
@@ -82,7 +78,7 @@ export class AppComponent {
   setColumnWidth(width: number){
     this.columnWidth = width;
     console.log("set column width");
-    this.taskList.forEach(task => { task.instance.width = this.columnWidth });
+    // this.taskList.forEach(task => { task.instance.width = this.columnWidth }); // not necessary anymore becaus bound to input element
     this.calculateSnapGrid();
   }
 
@@ -97,20 +93,20 @@ export class AppComponent {
 
   calculateSnapGrid(){
 
-    this.snappingGrid.horizontalLines = []
-    this.snappingGrid.verticalLines = []
+    this.snapGrid.horizontalLines = []
+    this.snapGrid.verticalLines = []
 
     Array(this.magneticRows).fill(0).map((_, i) => 
-      this.snappingGrid.horizontalLines.push((this.tablePos.y + this.columnHeight) + this.columnHeight*i)
+      this.snapGrid.horizontalLines.push((this.tablePos.y + this.columnHeight) + this.columnHeight*i)
     );
-    this.snappingGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth;
-    this.snappingGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth + this.magneticColumns * this.columnWidth;
+    this.snapGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth;
+    this.snapGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth + this.magneticColumns * this.columnWidth;
 
     Array(this.magneticColumns).fill(0).map((_, i) => 
-      this.snappingGrid.verticalLines.push(1 + (this.tablePos.x + this.firstColumnWidth) + (this.columnWidth)*i) // + i%4)
+      this.snapGrid.verticalLines.push(1 + (this.tablePos.x + this.firstColumnWidth) + (this.columnWidth)*i) // + i%4)
     );
-    this.snappingGrid.yVerticalStart = this.tablePos.y + this.columnHeight; 
-    this.snappingGrid.yVerticalEnd = this.tablePos.y + this.magneticRows * this.columnHeight;
+    this.snapGrid.yVerticalStart = this.tablePos.y + this.columnHeight; 
+    this.snapGrid.yVerticalEnd = this.tablePos.y + this.magneticRows * this.columnHeight;
 
     // total position y: position of table + position of horizontal line
     // total position x: position of tale + position of vertical line
@@ -118,4 +114,7 @@ export class AppComponent {
   }
 }
 
-
+export type Task = { 
+  taskId: string, 
+  taskContent: string,
+} 

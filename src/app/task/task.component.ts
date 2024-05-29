@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, NgZone, Renderer2, SimpleChanges} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, NgZone, Renderer2, SimpleChanges} from '@angular/core';
 import { SnappingGrid } from './snapping-grid';
 
 @Component({
-  selector: 'app-task',
+  selector: 'tt-task',
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.scss']
 })
@@ -10,8 +10,14 @@ export class TaskComponent implements OnChanges {
 
   // Snap Grid that defines where to snap. Has to be set on invocation, 
   // updated on every change (e.g., resizing & ngAfterViewInit) 
-  @Input() snapGrip: SnappingGrid | null = null
-  @Input() width = 0
+  @Input() snapGrid: SnappingGrid | null = null;
+  @Input() width = 0;
+
+  // current task position (top left)
+  public position = {
+    x: 0,
+    y: 0
+  };
 
   taskId: string = ""; 
 
@@ -23,11 +29,7 @@ export class TaskComponent implements OnChanges {
 
   snappingOffset = 10
 
-  // current task position
-  position = {
-    x: 0,
-    y: 0
-  }
+  
 
   // last mouse position (is only updated according the needs of the current event)
   mousePosition = {
@@ -50,10 +52,13 @@ export class TaskComponent implements OnChanges {
   constructor(private ngZone: NgZone, private renderer: Renderer2,  private cdr: ChangeDetectorRef) { 
   }
 
+
   ngOnChanges(changes: SimpleChanges){
     console.log("ngOnChanges:");
     console.log(JSON.stringify(changes));
   }
+
+
 
   onStartResizeUpper(event: MouseEvent){
     this.resizing = true;
@@ -175,16 +180,16 @@ export class TaskComponent implements OnChanges {
   snap(){
 
    console.log("Snap Grid:");
-   console.log(JSON.stringify(this.snapGrip));
+   console.log(JSON.stringify(this.snapGrid));
 
    //  array.some(x => x >= n && x <= n + 0.5);
-   let horizontalLine = this.snapGrip!.horizontalLines.find(line => this.position.y >= line && this.position.y - line < this.snappingOffset );
+   let horizontalLine = this.snapGrid!.horizontalLines.find(line => this.position.y >= line && this.position.y - line < this.snappingOffset );
   
    if (horizontalLine == undefined){
      return;
    }
 
-   let verticalLine = this.snapGrip!.verticalLines.find(line => this.position.x >= line && this.position.x - line < this.snappingOffset );
+   let verticalLine = this.snapGrid!.verticalLines.find(line => this.position.x >= line && this.position.x - line < this.snappingOffset );
 
     if (verticalLine == undefined){
      return;

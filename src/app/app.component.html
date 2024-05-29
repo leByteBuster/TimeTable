@@ -1,8 +1,11 @@
-<div [class]="'table-container'"><tt-table
+<div [class]="'table-container'">
+  <tt-table
     (columnWidthEmitter)=setColumnWidth($event)
     (firstColumnWidthEmitter)=setFirstColumnWidth($event)
     (tablePositionEmitter)=onChangeTablePosition($event)
-    ></tt-table></div>
+    >
+  </tt-table></div>
+  <tt-task *ngFor="let task of taskList" [width]="columnWidth" [snapGrid]="snapGrid" ></tt-task>
 <div [class]="'fixed-bottom-bar'">
   <button [class]="'task-button'" type="button" (click)="createTask()">
     +

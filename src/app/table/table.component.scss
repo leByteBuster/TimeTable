@@ -10,9 +10,9 @@
 }
 
 .label-container {
-  width: 40px;
-  height: 100%;
   display: flex;
+  width: 25px;
+  height: 100%;
   justify-content: flex-start;
   flex-wrap: wrap;
   padding: 0;
@@ -24,9 +24,13 @@
   height: 60px;
   flex-basis: 0px;
   flex-grow: 1; 
-  align-items: center;
+  align-items: baseline;
   padding: 0;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 0.5em;
 }
 
 .cell-container {
@@ -56,7 +60,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc((100% - 30px)/7.3); // need to be less than 8 because first colum is smaller  
+  width: calc((100% - 25px)/7); // need to be less than 8 because first colum is smaller  
   // min-width: 80px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
   user-select: none;
   height: 30px;
@@ -80,9 +84,9 @@
 /* first column */
 .tablecell:nth-child(8n-7) {
   border-left: none; /* Remove left border for every 1st element */
-  background: #eeeeee;
-  width: 10px; 
-  min-width: 50px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
+  //background: #eeeeee;
+  width: 15px; 
+  min-width: 15px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
 }
 
 /* Remove bottom border for last row */

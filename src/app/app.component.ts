@@ -12,6 +12,7 @@ export class AppComponent {
   // TODO NEXT:
   // -[] how to pass initial position to task without data binding ? 
   // -[] fix inaccurate snapping  
+  // -[] deal with window resizing behaviour. if window gets to small
 
   title = 'TimeTable';
 

@@ -48,6 +48,8 @@ export class TableComponent implements OnInit {
   }
 
   updateCellWidth(){
+    this.firstColumnWidth = Infinity
+    this.columnWidth = 0 
     this.tableCells.forEach(cell => {
       let tmpWidth = cell.nativeElement.offsetWidth;
       this.columnWidth = tmpWidth  > this.columnWidth ? tmpWidth : this.columnWidth;

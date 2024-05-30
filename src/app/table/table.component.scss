@@ -15,12 +15,32 @@
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  align-content: flex-start;
 }
 
 .label {
   height: 60px;
-  width: 100%;
+  flex-basis: 0px;
+  flex-grow: 1; 
   align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.cell-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex-basis: 0; // basis-width before shrinking / growing 
+  flex-grow: 1; // use remaining space
+}
+
+/* standard time table cell */
+.tablecell {
+  display: flex;
 }
 
 .cell-container {
@@ -58,7 +78,7 @@
 }
 
 /* first column */
-.tablecell:nth-child(8n-6) {
+.tablecell:nth-child(8n-7) {
   border-left: none; /* Remove left border for every 1st element */
   background: #eeeeee;
   width: 10px; 

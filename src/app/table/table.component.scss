@@ -5,9 +5,30 @@
   justify-content: flex-start;
   // width: 80vw;
   width: 100%;
-  max-width: 100%;
   padding: 20px;
   //overflow-x: auto;
+}
+
+.label-container {
+  width: 40px;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.label {
+  height: 60px;
+  width: 100%;
+  align-items: center;
+}
+
+.cell-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-basis: 0; // basis-width before shrinking / growing 
+  flex-grow: 1; // use remaining space
 }
 
 /* standard time table cell */
@@ -15,7 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc((100% - 20px)/7.3); // need to be less than 8 because first colum is smaller  
+  width: calc((100% - 30px)/7.3); // need to be less than 8 because first colum is smaller  
   // min-width: 80px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
   user-select: none;
   height: 30px;
@@ -37,10 +58,10 @@
 }
 
 /* first column */
-.tablecell:nth-child(8n-7) {
+.tablecell:nth-child(8n-6) {
   border-left: none; /* Remove left border for every 1st element */
   background: #eeeeee;
-  width: 20px; 
+  width: 10px; 
   min-width: 50px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
 }
 

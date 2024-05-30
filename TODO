@@ -10,6 +10,7 @@
   - [] maybe stick somehow task to cells or assign current cells to task to know where it is   
   - [] maybe use a service handling the awareness ? 
 -[x] table gets out of bounds (overflows parent) when i shrink browser window too much
+-[] add margin to left - include for snap-grid calculation
 
 -[] clean css
 -[] disable text selection in task (not possible with only css for elements set 'contenteditable')

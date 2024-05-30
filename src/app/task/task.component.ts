@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, NgZone, Renderer2, SimpleChanges} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, NgZone, Renderer2, SimpleChanges} from '@angular/core';
+import {Coordinate} from '../table/tablePosition';
 import { SnappingGrid } from './snapping-grid';
 
 @Component({
@@ -6,15 +7,20 @@ import { SnappingGrid } from './snapping-grid';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.scss']
 })
-export class TaskComponent implements OnChanges {
+export class TaskComponent implements OnChanges, OnInit {
 
   // Snap Grid that defines where to snap. Has to be set on invocation, 
   // updated on every change (e.g., resizing & ngAfterViewInit) 
   @Input() snapGrid: SnappingGrid | null = null;
   @Input() width = 0;
+ // initial position (only used for initialisation) 
+  @Input() initPosition: Coordinate = {
+    x: 0,
+    y: 0
+  };
 
   // current task position (top left)
-  public position = {
+  position: Coordinate = {
     x: 0,
     y: 0
   };
@@ -50,6 +56,16 @@ export class TaskComponent implements OnChanges {
   removeStopDraggingListener: () => void = () => {};
 
   constructor(private ngZone: NgZone, private renderer: Renderer2,  private cdr: ChangeDetectorRef) { 
+  }
+
+  ngOnInit(){
+    // NOTE:
+    // somehow this is enough so the position of every instance is independent.
+    // i really don't know why. i thought this just sets position to the reference
+    // of initPosiiton which would make the position object being initPosition object
+    // and therefore the same for all instances. Which would lead to the same position of
+    // each instance when dragging. 
+    this.position = this.initPosition
   }
 
 

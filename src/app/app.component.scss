@@ -1,8 +1,10 @@
 .table-container{
   width: 100%;
+  min-width: 1000px;
   display: flex;
   justify-content: center;
   margin-right: 30px;
+  overflow-x: auto;
 }
 
 .fixed-bottom-bar{

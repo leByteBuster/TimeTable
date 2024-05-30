@@ -1,11 +1,13 @@
-
 // time table container
 :host {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   // width: 80vw;
+  width: 100%;
+  max-width: 100%;
   padding: 20px;
+  //overflow-x: auto;
 }
 
 /* standard time table cell */
@@ -13,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(100%/7.9); // need to be less than 8 because first colum is smaller  
+  width: calc((100% - 20px)/7.3); // need to be less than 8 because first colum is smaller  
   // min-width: 80px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
   user-select: none;
   height: 30px;
@@ -38,7 +40,7 @@
 .tablecell:nth-child(8n-7) {
   border-left: none; /* Remove left border for every 1st element */
   background: #eeeeee;
-  width: calc(100%/12); 
+  width: 20px; 
   min-width: 50px; //does not really work yet. because the container still shrinks the wrapping is messing up the table 
 }
 

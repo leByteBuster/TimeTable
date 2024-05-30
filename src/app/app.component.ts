@@ -98,10 +98,11 @@ export class AppComponent {
       this.snapGrid.horizontalLines.push((this.tablePos.y + this.columnHeight) + this.columnHeight*i)
     );
     this.snapGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth;
-    this.snapGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth + this.magneticColumns * this.columnWidth;
+    this.snapGrid.xHorizontalEnd = this.tablePos.x + this.firstColumnWidth + this.magneticColumns * this.columnWidth;
 
     Array(this.magneticColumns).fill(0).map((_, i) => 
-      this.snapGrid.verticalLines.push((this.tablePos.x + this.firstColumnWidth) + (this.columnWidth)*i)  // + i%4)
+      // no idea why 0.2 is necessary. 
+      this.snapGrid.verticalLines.push((this.tablePos.x + this.firstColumnWidth) + (this.columnWidth - 0.05)*i)  // + i%4)
     );
     this.snapGrid.yVerticalStart = this.tablePos.y + this.columnHeight; 
     this.snapGrid.yVerticalEnd = this.tablePos.y + this.magneticRows * this.columnHeight;

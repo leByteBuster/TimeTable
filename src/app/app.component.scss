@@ -45,4 +45,11 @@
   background-color: white;
 }
 
-
+.mouse-position{
+  width: 50;
+  width: 50;
+  position: fixed;
+  color: red;
+  z-index:100;
+  bottom: 0px;
+}

@@ -9,10 +9,7 @@ import { SnappingGrid } from './task/snapping-grid';
 })
 export class AppComponent {
 
-  // TODO NEXT:
-  // -[] how to pass initial position to task without data binding ? 
-  // -[] fix inaccurate snapping  
-  // -[] deal with window resizing behaviour. if window gets to small
+  mouseposition:  Coordinate = {x: 0, y: 0}
 
   title = 'TimeTable';
 
@@ -104,7 +101,7 @@ export class AppComponent {
     this.snapGrid.xHorizontalStart = this.tablePos.x + this.firstColumnWidth + this.magneticColumns * this.columnWidth;
 
     Array(this.magneticColumns).fill(0).map((_, i) => 
-      this.snapGrid.verticalLines.push(1 + (this.tablePos.x + this.firstColumnWidth) + (this.columnWidth)*i) // + i%4)
+      this.snapGrid.verticalLines.push((this.tablePos.x + this.firstColumnWidth) + (this.columnWidth)*i)  // + i%4)
     );
     this.snapGrid.yVerticalStart = this.tablePos.y + this.columnHeight; 
     this.snapGrid.yVerticalEnd = this.tablePos.y + this.magneticRows * this.columnHeight;
@@ -113,9 +110,16 @@ export class AppComponent {
     // total position x: position of tale + position of vertical line
     // check total position of task against total x & y position
   }
+
+
+  onMouseMove(event: MouseEvent){
+    this.mouseposition.x = event.clientX;
+    this.mouseposition.y = event.clientY;
+  }
 }
 
 export type Task = { 
   taskId: string, 
   taskContent: string,
 } 
+

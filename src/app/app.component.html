@@ -1,4 +1,4 @@
-<div [class]="'table-container'">
+<div [class]="'table-container'" (mousemove)="onMouseMove($event)">
   <tt-table
     (columnWidthEmitter)=setColumnWidth($event)
     (firstColumnWidthEmitter)=setFirstColumnWidth($event)
@@ -10,4 +10,7 @@
   <button [class]="'task-button'" type="button" (click)="createTask()">
     +
   </button>
+</div>
+<div [class]="'mouse-position'">
+  {{mouseposition.x}} {{mouseposition.y}}
 </div>
